@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, Edit, FileInput, Trash2 } from 'lucide-react';
+import { Eye, Edit, FileInput, Trash2, Search } from 'lucide-react';
 import { Line, ViewState } from '../types';
 
 interface DashboardProps {
@@ -11,10 +11,14 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ lines, onNavigate, onDelete }) => {
   const [searchName, setSearchName] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
+  const [searchSubRouteCount, setSearchSubRouteCount] = useState('');
+  const [searchMinibusCount, setSearchMinibusCount] = useState('');
 
   const filteredLines = lines.filter(line => 
     line.name.toLowerCase().includes(searchName.toLowerCase()) &&
-    (searchStatus === '' || line.status === searchStatus)
+    (searchStatus === '' || line.status === searchStatus) &&
+    line.subRoutes.length.toString().includes(searchSubRouteCount) &&
+    line.minibusCount.toString().includes(searchMinibusCount)
   );
 
   return (
@@ -54,20 +58,56 @@ const Dashboard: React.FC<DashboardProps> = ({ lines, onNavigate, onDelete }) =>
             {/* Search Row */}
             <tr className="bg-blue-50">
               <th className="border p-1"></th>
+              
+              {/* Hat Adı Arama */}
               <th className="border p-1">
-                <input 
-                  type="text" 
-                  placeholder="ARAMA KUTUCUĞU" 
-                  className="w-full border border-gray-300 p-1 text-xs"
-                  value={searchName}
-                  onChange={(e) => setSearchName(e.target.value)}
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                    <Search size={14} className="text-gray-400" />
+                  </div>
+                  <input 
+                    type="text" 
+                    className="w-full border border-gray-300 p-1 pl-8 text-xs rounded focus:outline-none focus:border-blue-400"
+                    value={searchName}
+                    onChange={(e) => setSearchName(e.target.value)}
+                  />
+                </div>
               </th>
-              <th className="border p-1 text-center text-xs text-gray-500">ARAMA KUTUCUĞU</th>
-              <th className="border p-1 text-center text-xs text-gray-500">ARAMA KUTUCUĞU</th>
+
+              {/* Alt Güzergah Sayısı Arama */}
+              <th className="border p-1 text-center">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                    <Search size={14} className="text-gray-400" />
+                  </div>
+                  <input 
+                    type="text" 
+                    className="w-full border border-gray-300 p-1 pl-8 text-xs rounded focus:outline-none focus:border-blue-400"
+                    value={searchSubRouteCount}
+                    onChange={(e) => setSearchSubRouteCount(e.target.value)}
+                  />
+                </div>
+              </th>
+
+              {/* Minibüs Sayısı Arama */}
+              <th className="border p-1 text-center">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                    <Search size={14} className="text-gray-400" />
+                  </div>
+                  <input 
+                    type="text" 
+                    className="w-full border border-gray-300 p-1 pl-8 text-xs rounded focus:outline-none focus:border-blue-400"
+                    value={searchMinibusCount}
+                    onChange={(e) => setSearchMinibusCount(e.target.value)}
+                  />
+                </div>
+              </th>
+
+              {/* Durum Filtreleme */}
               <th className="border p-1">
                 <select 
-                   className="w-full border border-gray-300 p-1 text-xs"
+                   className="w-full border border-gray-300 p-1 text-xs rounded focus:outline-none focus:border-blue-400"
                    value={searchStatus}
                    onChange={(e) => setSearchStatus(e.target.value)}
                 >
